@@ -3,59 +3,124 @@
 CIRCUITO PRINCIPAL:
 
 ESP32-WROOM-32:
-- GPIO 5 → Relé (Pin IN)
-- GND → Relé (GND)
-- 5V → Relé (VCC)
+- GPIO 5 → LED (a través de resistencia 220Ω)
+- GPIO 4 → Sensor PIR (pin OUT)
+- GND → Masa común
+- 5V → Alimentación
 - USB → Programación
 
-Relé 5V:
-- GND → ESP32 GND
-- IN → ESP32 GPIO 5
-- VCC → ESP32 5V
+Sensor PIR (HC-SR501):
+- VCC → 5V
+- GND → GND (masa común)
+- OUT → GPIO 4 (lectura digital)
 
-Contactos del Relé:
-- COM → Fase del Foco
-- NO → Foco
-- NC → Sin conectar
+LED:
+- Ánodo (+) → GPIO 5 (a través de resistencia 220Ω)
+- Cátodo (-) → GND (masa común)
+
+=== CONEXIONES DETALLADAS ===
+
+Lado del ESP32:
+┌─────────────────────────────┐
+│   ESP32-WROOM-32            │
+│  ┌─────────────────────┐    │
+│  │ GND  3V3  5V        │    │
+│  │ D32  D33  TX        │    │
+│  │ D35  D34  RX        │    │
+│  │ EN   D39  TX        │    │
+│  │ D36  D23  RX        │    │
+│  │ D4   D22            │    │
+│  │ D2   D21            │    │
+│  │ D15  D19            │    │
+│  │ D14  D18            │    │
+│  │ D27  D5  ←──────────┼────┤ GPIO 5 (LED)
+│  │ D25  D17            │    │
+│  │ D26  D16            │    │
+│  │ D3   GND  ←─────────┼────┤ GPIO 4 (Sensor PIR)
+│  │       GND           │    │
+│  │       5V            │    │
+│  └─────────────────────┘    │
+└─────────────────────────────┘
+
+=== CONEXIÓN DEL LED ===
+
+LED:
+    ┌──────────────────┐
+    │  Resistencia 220Ω │
+    │  ┌──────────────────┐
+    │  │ GPIO 5 (ESP32) ──┤├──→ LED (+) ánodo
+    │  └──────────────────┘
+    │
+    └──→ LED (-) cátodo ──→ GND
+
+=== CONEXIÓN DEL SENSOR PIR (HC-SR501) ===
+
+Sensor PIR:
+    ┌──────────────┐
+    │  HC-SR501    │
+    │  ┌────────┐  │
+    │  │ GND │ IN │ VCC │
+    │  └────────┘  │
+    │   │    │      │
+    │   │    │      └──→ 5V (ESP32)
+    │   │    └──────────→ GPIO 4 (ESP32)
+    │   └───────────────→ GND (ESP32)
 
 === ALIMENTACIÓN ===
 
-Fuente de 5V → ESP32 VCC y GND
-Fuente de 5V → Relé VCC y GND
-(Pueden ser la misma fuente con tierra común)
+Fuente de 5V:
+- Positivo (+) → ESP32 5V
+- Positivo (+) → Sensor PIR VCC
+- Negativo (-) → GND (masa común)
+
+Tierra común (GND):
+- ESP32 GND
+- Sensor PIR GND
+- LED (-) cátodo
 
 === CABLE USB ===
 
 Para programar el ESP32:
-- USB ↔ Conector Micro USB del ESP32
+- USB (PC) ↔ Micro USB (ESP32)
 - TX/RX se configuran automáticamente
 - Velocidad: 115200 baud
 
-=== FOCO CON CORRIENTE ALTERNA (220V) ===
+=== ESPECIFICACIONES TÉCNICAS ===
 
-Relé Potencia (Relé 5V con contactos 10A):
+LED:
+- Voltaje de operación: 3.3V - 5V
+- Corriente máxima: 20mA
+- Resistencia limitadora: 220Ω
 
-Lado bajo voltaje (5V del ESP32):
-- Coil GND → ESP32 GND
-- Coil IN → ESP32 GPIO 5
-- Coil VCC → ESP32 5V
+Sensor PIR (HC-SR501):
+- Voltaje de operación: 5V
+- Corriente: 50-65mA
+- Rango de detección: 5-20 metros
+- Ángulo de detección: 110°
+- Tiempo de activación: 2-3 segundos
+- Tiempo de desactivación: 2-3 segundos
 
-Lado alto voltaje (220V):
-- COM → Fase (220V)
-- NO → Foco (220V)
-- NC → Sin conectar
-
-⚠️ PRECAUCIÓN: Maneja 220V con cuidado
-   Aisla bien todas las conexiones
+ESP32-WROOM-32:
+- Voltaje de operación: 3.3V (GPIO)
+- Corriente: hasta 80mA por GPIO
+- Frecuencia WiFi: 2.4GHz
+- WiFi Mode: AP (Access Point)
 
 === COMPONENTES NECESARIOS ===
 
 - 1x ESP32-WROOM-32 DevKit
-- 1x Relé 5V (JQC-3F/005-1HS) o similar
-- 1x Diodo 1N4007 (protección opcional)
-- 1x Resistencia 330Ω (opcional, LED indicador)
+- 1x Sensor PIR HC-SR501
+- 1x LED (RGB o blanco)
+- 1x Resistencia 220Ω (para LED)
 - 1x Cable USB Micro
-- Cables jumper (macho-hembra y macho-macho)
+- 4-6x Cables jumper (macho-hembra)
 - 1x Fuente 5V 2A mínimo
-- 1x Foco LED o incandescente
-- Tubo termoencogible para aislar conexiones
+- Tubo termoencogible (opcional, para aislar conexiones)
+
+=== NOTAS IMPORTANTES ===
+
+1. El sensor PIR necesita 30-60 segundos para calibrar al iniciar
+2. La resistencia 220Ω limita la corriente del LED a ~15mA (seguro)
+3. La tierra (GND) debe ser común entre todos los componentes
+4. Evita conexiones sueltas; usa soldadura o connectors firmes
+5. El sensor PIR tiene dos potenciómetros: sensibilidad y tiempo de delay
