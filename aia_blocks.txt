@@ -1,0 +1,38 @@
+=== BLOQUES MIT APP INVENTOR ===
+
+Archivo: ControlFoco.aia
+
+COMPONENTES:
+1. VerticalArrangement (vertical_arrangement1)
+2. Label "Control de Foco" (lbl_titulo)
+3. Image (img_foco)
+4. Label "Estado: Apagado" (lbl_estado)
+5. Button "ENCENDER" (btn_encender)
+6. Button "APAGAR" (btn_apagar)
+7. TextBox IP (txt_ip)
+8. Web Component (web_esp32)
+
+--- BLOQUES DE LÓGICA ---
+
+BLOQUE 1: btn_encender.Click
+├─ call web_esp32.Get
+│  └─ url: join ["http://" txt_ip.Text "/encender"]
+├─ set lbl_estado.Text → "Estado: Encendido"
+└─ set img_foco.Picture → (imagen_bombilla_encendida)
+
+BLOQUE 2: btn_apagar.Click
+├─ call web_esp32.Get
+│  └─ url: join ["http://" txt_ip.Text "/apagar"]
+├─ set lbl_estado.Text → "Estado: Apagado"
+└─ set img_foco.Picture → (imagen_bombilla_apagada)
+
+BLOQUE 3: web_esp32.GotText (opcional)
+├─ parámetro: responseCode
+├─ parámetro: responseText
+└─ call showNotification [responseText]
+
+--- VARIABLES GLOBALES (si necesitas) ---
+
+Ninguna requerida, pero puedes agregar:
+- global ip_address (inicializar con "192.168.4.1")
+- global foco_estado (booleano: true/false)

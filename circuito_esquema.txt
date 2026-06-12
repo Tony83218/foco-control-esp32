@@ -1,0 +1,61 @@
+=== ESQUEMA DE CONEXIÓN PARA ESP32-WROOM-32 ===
+
+CIRCUITO PRINCIPAL:
+
+ESP32-WROOM-32:
+- GPIO 5 → Relé (Pin IN)
+- GND → Relé (GND)
+- 5V → Relé (VCC)
+- USB → Programación
+
+Relé 5V:
+- GND → ESP32 GND
+- IN → ESP32 GPIO 5
+- VCC → ESP32 5V
+
+Contactos del Relé:
+- COM → Fase del Foco
+- NO → Foco
+- NC → Sin conectar
+
+=== ALIMENTACIÓN ===
+
+Fuente de 5V → ESP32 VCC y GND
+Fuente de 5V → Relé VCC y GND
+(Pueden ser la misma fuente con tierra común)
+
+=== CABLE USB ===
+
+Para programar el ESP32:
+- USB ↔ Conector Micro USB del ESP32
+- TX/RX se configuran automáticamente
+- Velocidad: 115200 baud
+
+=== FOCO CON CORRIENTE ALTERNA (220V) ===
+
+Relé Potencia (Relé 5V con contactos 10A):
+
+Lado bajo voltaje (5V del ESP32):
+- Coil GND → ESP32 GND
+- Coil IN → ESP32 GPIO 5
+- Coil VCC → ESP32 5V
+
+Lado alto voltaje (220V):
+- COM → Fase (220V)
+- NO → Foco (220V)
+- NC → Sin conectar
+
+⚠️ PRECAUCIÓN: Maneja 220V con cuidado
+   Aisla bien todas las conexiones
+
+=== COMPONENTES NECESARIOS ===
+
+- 1x ESP32-WROOM-32 DevKit
+- 1x Relé 5V (JQC-3F/005-1HS) o similar
+- 1x Diodo 1N4007 (protección opcional)
+- 1x Resistencia 330Ω (opcional, LED indicador)
+- 1x Cable USB Micro
+- Cables jumper (macho-hembra y macho-macho)
+- 1x Fuente 5V 2A mínimo
+- 1x Foco LED o incandescente
+- Tubo termoencogible para aislar conexiones
